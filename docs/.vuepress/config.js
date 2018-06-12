@@ -3,7 +3,7 @@ module.exports = {
     '/': {
       lang: 'en-US',
       title: 'Vue CLI',
-      description: 'Standard Tooling for Vue.js Projects'
+      description: '🛠️ Standard Tooling for Vue.js Development'
     }
   },
   serviceWorker: true,
@@ -33,7 +33,8 @@ module.exports = {
             text: 'Dev Guide',
             items: [
               { text: 'Plugin Dev Guide', link: '/dev-guide/plugin-dev.md' },
-              { text: 'UI Plugin Dev Guide', link: '/dev-guide/ui-plugin-dev.md' },
+              { text: 'UI Plugin Info', link: '/dev-guide/ui-info.md' },
+              { text: 'UI Plugin API', link: '/dev-guide/ui-api.md' },
               { text: 'UI Localization', link: '/dev-guide/ui-localization.md' }
             ]
           },
@@ -74,6 +75,8 @@ module.exports = {
                 '/guide/cli-service',
                 '/guide/browser-compatibility',
                 '/guide/html-and-static-assets',
+                '/guide/css',
+                '/guide/webpack',
                 '/guide/mode-and-env',
                 '/guide/build-targets',
                 '/guide/deployment'
@@ -82,7 +85,8 @@ module.exports = {
           ],
           '/dev-guide/': [
             '/dev-guide/plugin-dev.md',
-            '/dev-guide/ui-plugin-dev.md',
+            '/dev-guide/ui-info.md',
+            '/dev-guide/ui-api.md',
             '/dev-guide/ui-localization.md'
           ]
         }

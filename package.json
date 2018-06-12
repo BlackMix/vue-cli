@@ -9,6 +9,7 @@
     "test": "node scripts/test.js",
     "pretest": "yarn clean",
     "lint": "eslint --fix packages/**/*.js packages/**/bin/*",
+    "check-links": "node scripts/checkLinks.js",
     "clean": "rimraf packages/test/*",
     "sync": "node scripts/syncDeps.js",
     "boot": "node scripts/bootstrap.js",
@@ -34,7 +35,7 @@
     ]
   },
   "lint-staged": {
-    "*.js": [
+    "*.{js,vue}": [
       "eslint --fix",
       "git add"
     ],
@@ -59,7 +60,7 @@
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
     "rimraf": "^2.6.2",
-    "vuepress": "^0.10.0",
+    "vuepress": "^0.10.1",
     "vuepress-theme-vue": "^1.0.3",
     "yorkie": "^1.0.2"
   },

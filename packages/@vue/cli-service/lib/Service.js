@@ -53,12 +53,12 @@ module.exports = class Service {
     this.initialized = true
     this.mode = mode
 
-    // load base .env
-    this.loadEnv()
     // load mode .env
     if (mode) {
       this.loadEnv(mode)
     }
+    // load base .env
+    this.loadEnv()
 
     // load user config
     const userOptions = this.loadUserOptions()
@@ -81,15 +81,6 @@ module.exports = class Service {
   }
 
   loadEnv (mode) {
-    if (mode) {
-      // by default, NODE_ENV and BABEL_ENV are set to "development" unless mode
-      // is production or test. However this can be overwritten in .env files.
-      process.env.NODE_ENV = process.env.BABEL_ENV =
-        (mode === 'production' || mode === 'test')
-          ? mode
-          : 'development'
-    }
-
     const logger = debug('vue:env')
     const basePath = path.resolve(this.context, `.env${mode ? `.${mode}` : ``}`)
     const localPath = `${basePath}.local`
@@ -106,8 +97,29 @@ module.exports = class Service {
       }
     }
 
-    load(basePath)
     load(localPath)
+    load(basePath)
+
+    // by default, NODE_ENV and BABEL_ENV are set to "development" unless mode
+    // is production or test. However the value in .env files will take higher
+    // priority.
+    if (mode) {
+      // always set NODE_ENV during tests
+      // as that is necessary for tests to not be affected by each other
+      const shouldForceDefaultEnv = (
+        process.env.VUE_CLI_TEST &&
+        !process.env.VUE_CLI_TEST_TESTING_ENV
+      )
+      const defaultNodeEnv = (mode === 'production' || mode === 'test')
+        ? mode
+        : 'development'
+      if (shouldForceDefaultEnv || process.env.NODE_ENV == null) {
+        process.env.NODE_ENV = defaultNodeEnv
+      }
+      if (shouldForceDefaultEnv || process.env.BABEL_ENV == null) {
+        process.env.BABEL_ENV = defaultNodeEnv
+      }
+    }
   }
 
   resolvePlugins (inlinePlugins, useBuiltIn) {
@@ -194,10 +206,9 @@ module.exports = class Service {
 
     // check if the user has manually mutated output.publicPath
     const target = process.env.VUE_CLI_BUILD_TARGET
-    const exceptionTargets = ['lib', 'wc', 'wc-async']
     if (
       !process.env.VUE_CLI_TEST &&
-      !exceptionTargets.includes(target) &&
+      (target && target !== 'app') &&
       config.output.publicPath !== this.projectOptions.baseUrl
     ) {
       throw new Error(
@@ -268,6 +279,15 @@ module.exports = class Service {
     }
     ensureSlash(resolved, 'baseUrl')
     removeSlash(resolved, 'outputDir')
+
+    // deprecation warning
+    // TODO remove in final release
+    if (resolved.css && resolved.css.localIdentName) {
+      warn(
+        `css.localIdentName has been deprecated. ` +
+        `All css-loader options (except "modules") are now supported via css.loaderOptions.css.`
+      )
+    }
 
     // validate options
     validate(resolved, msg => {
