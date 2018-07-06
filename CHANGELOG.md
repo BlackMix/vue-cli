@@ -1,3 +1,208 @@
+<a name="3.0.0-rc.3"></a>
+# [3.0.0-rc.3](https://github.com/vuejs/vue-cli/compare/v3.0.0-rc.2...v3.0.0-rc.3) (2018-06-18)
+
+
+### Bug Fixes
+
+* **invoke:** deep merge only plain objects ([a7f3c2c](https://github.com/vuejs/vue-cli/commit/a7f3c2c))
+* **invoke:** merge data in config transforms ([35cb714](https://github.com/vuejs/vue-cli/commit/35cb714))
+* **invoke:** not reading dot files ([49d56db](https://github.com/vuejs/vue-cli/commit/49d56db))
+* **ui:** bail on error reading package.json, closes [#1599](https://github.com/vuejs/vue-cli/issues/1599) ([3ebb104](https://github.com/vuejs/vue-cli/commit/3ebb104))
+* **ui:** Config prompts error ([bbc974d](https://github.com/vuejs/vue-cli/commit/bbc974d))
+* **ui:** configurations: broken package.json mode, closes [#1598](https://github.com/vuejs/vue-cli/issues/1598) ([5885dd5](https://github.com/vuejs/vue-cli/commit/5885dd5))
+* **ui:** create: package manager select ([61662c4](https://github.com/vuejs/vue-cli/commit/61662c4))
+* **ui:** folder explorer: better performance + auto scroll to top ([d63cc0d](https://github.com/vuejs/vue-cli/commit/d63cc0d))
+* **ui:** folder loading indicator + e2e tests ([6c4ebb0](https://github.com/vuejs/vue-cli/commit/6c4ebb0))
+* **ui:** folder path parts style ([123fffa](https://github.com/vuejs/vue-cli/commit/123fffa))
+* **ui:** images urls while serving the ui (dev) ([4144efc](https://github.com/vuejs/vue-cli/commit/4144efc))
+* **ui:** improved performance ([c378658](https://github.com/vuejs/vue-cli/commit/c378658))
+* **ui:** improved remote preset checking ([0ba5e09](https://github.com/vuejs/vue-cli/commit/0ba5e09))
+* **ui:** list item hover background more subtle ([a5bb260](https://github.com/vuejs/vue-cli/commit/a5bb260))
+* **ui:** more spacing in status bar ([80a847f](https://github.com/vuejs/vue-cli/commit/80a847f))
+* **ui:** process exit guard ([29fcee7](https://github.com/vuejs/vue-cli/commit/29fcee7))
+* **ui:** project create detials: bigger grid gap ([cfed833](https://github.com/vuejs/vue-cli/commit/cfed833))
+* **ui:** project creation not reset ([9efdfaf](https://github.com/vuejs/vue-cli/commit/9efdfaf))
+* **ui:** put temp stats files in node_modules ([2a21434](https://github.com/vuejs/vue-cli/commit/2a21434))
+* **ui:** remove console.log ([04d76a2](https://github.com/vuejs/vue-cli/commit/04d76a2))
+* **ui:** reset webpack.config.js service on correct CWD, closes [#1555](https://github.com/vuejs/vue-cli/issues/1555) ([dc2f8e8](https://github.com/vuejs/vue-cli/commit/dc2f8e8))
+* **ui:** task logs performance regression ([0ea3a22](https://github.com/vuejs/vue-cli/commit/0ea3a22))
+* **ui:** task logs queue not flushed if not enough logs ([8753971](https://github.com/vuejs/vue-cli/commit/8753971))
+* **ui:** terminal dark theme background ([959ea07](https://github.com/vuejs/vue-cli/commit/959ea07))
+* **ui:** translate link ([f365767](https://github.com/vuejs/vue-cli/commit/f365767))
+* **ui:** tweak prompt style for more spacing ([d5d57fe](https://github.com/vuejs/vue-cli/commit/d5d57fe))
+* **ui:** typo ([#1600](https://github.com/vuejs/vue-cli/issues/1600)) ([e261ddb](https://github.com/vuejs/vue-cli/commit/e261ddb))
+* better version check, closes [#1564](https://github.com/vuejs/vue-cli/issues/1564) ([8b9477f](https://github.com/vuejs/vue-cli/commit/8b9477f))
+
+
+### Features
+
+* **ui:** about button in project manager ([a242d73](https://github.com/vuejs/vue-cli/commit/a242d73))
+* **ui:** allow partial GraphQL results ([e6d68ca](https://github.com/vuejs/vue-cli/commit/e6d68ca))
+* **ui:** basic global error handler ([5566208](https://github.com/vuejs/vue-cli/commit/5566208))
+* **ui:** better item logo animation ([22b92ba](https://github.com/vuejs/vue-cli/commit/22b92ba))
+* **ui:** folder explorer: better UX + hide hidden folders by default ([545cc3f](https://github.com/vuejs/vue-cli/commit/545cc3f))
+* **ui:** folder explorer: change position of error icon ([d62ad77](https://github.com/vuejs/vue-cli/commit/d62ad77))
+* **ui:** folder explorer: create new folders ([ccde77c](https://github.com/vuejs/vue-cli/commit/ccde77c))
+* **ui:** import project: missing modules modal ([99dc316](https://github.com/vuejs/vue-cli/commit/99dc316))
+* **ui:** mocha task ([b0ed1e2](https://github.com/vuejs/vue-cli/commit/b0ed1e2))
+* **ui:** project create: folder already exists warning ([4d9a092](https://github.com/vuejs/vue-cli/commit/4d9a092))
+* **ui:** project manager: back button ([4413dee](https://github.com/vuejs/vue-cli/commit/4413dee))
+* **ui:** refresh plugin API button ([c658223](https://github.com/vuejs/vue-cli/commit/c658223))
+* **ui:** remote preset support ([7402148](https://github.com/vuejs/vue-cli/commit/7402148))
+* **ui:** suggestions animation ([82836f5](https://github.com/vuejs/vue-cli/commit/82836f5))
+* **ui:** v-focus directive ([e1a0c4c](https://github.com/vuejs/vue-cli/commit/e1a0c4c))
+* **ui:** validate new project folder name ([8957c3a](https://github.com/vuejs/vue-cli/commit/8957c3a))
+* **ui:** vue-cli config ([2f0961d](https://github.com/vuejs/vue-cli/commit/2f0961d))
+
+
+
+<a name="3.0.0-rc.2"></a>
+# [3.0.0-rc.2](https://github.com/vuejs/vue-cli/compare/v3.0.0-rc.1...v3.0.0-rc.2) (2018-06-14)
+
+
+### Bug Fixes
+
+* **ui:** sharedData watchers ([f486d7e](https://github.com/vuejs/vue-cli/commit/f486d7e))
+* **ui:** wrong NODE_ENV value if undefined ([09b72eb](https://github.com/vuejs/vue-cli/commit/09b72eb))
+* **ui:** wwebpack dashboard performance improvements ([9f5dda4](https://github.com/vuejs/vue-cli/commit/9f5dda4))
+
+
+### Features
+
+* **ui:** modern build mode ([dbf7231](https://github.com/vuejs/vue-cli/commit/dbf7231))
+
+
+
+<a name="3.0.0-rc.1"></a>
+# [3.0.0-rc.1](https://github.com/vuejs/vue-cli/compare/v3.0.0-beta.16...v3.0.0-rc.1) (2018-06-13)
+
+
+### Bug Fixes
+
+* asset output relative check ([1195aee](https://github.com/vuejs/vue-cli/commit/1195aee)), closes [#1545](https://github.com/vuejs/vue-cli/issues/1545)
+* check more files for links ([182f3b7](https://github.com/vuejs/vue-cli/commit/182f3b7))
+* clear children modules from cache ([50027c6](https://github.com/vuejs/vue-cli/commit/50027c6))
+* fix custom mode NODE_ENV regression ([60de7c4](https://github.com/vuejs/vue-cli/commit/60de7c4)), closes [#1528](https://github.com/vuejs/vue-cli/issues/1528)
+* runtimeCompiler default ([e15fa20](https://github.com/vuejs/vue-cli/commit/e15fa20))
+* should repsect configureWebpack hooks when resolving app config ([a7564d6](https://github.com/vuejs/vue-cli/commit/a7564d6))
+* **ui:** dark mode nav button badge counters ([0ba3920](https://github.com/vuejs/vue-cli/commit/0ba3920))
+* transform es modules syntax for Jest when not using Babel ([65d5d36](https://github.com/vuejs/vue-cli/commit/65d5d36)), closes [#1524](https://github.com/vuejs/vue-cli/issues/1524)
+* **build:** --target app should respect inline entry as well ([323a38c](https://github.com/vuejs/vue-cli/commit/323a38c)), closes [#1533](https://github.com/vuejs/vue-cli/issues/1533)
+* **ui:** bail access denied folders ([5984a0d](https://github.com/vuejs/vue-cli/commit/5984a0d))
+* **ui:** create: first feature removed if 'use config files' not checked ([b361473](https://github.com/vuejs/vue-cli/commit/b361473))
+* **ui:** CSS Pre-processors "More info" link leads to 404 ([#1534](https://github.com/vuejs/vue-cli/issues/1534)) ([919bcbb](https://github.com/vuejs/vue-cli/commit/919bcbb))
+* **ui:** improve task logs performance ([36908a9](https://github.com/vuejs/vue-cli/commit/36908a9))
+* **ui:** increase terminal output scrollback ([292c35f](https://github.com/vuejs/vue-cli/commit/292c35f))
+* use devServer.public to build sockjsUrl, if defined. ([#1526](https://github.com/vuejs/vue-cli/issues/1526)) ([f0498f6](https://github.com/vuejs/vue-cli/commit/f0498f6))
+* **ui:** IPC conflict ([1fcd2d0](https://github.com/vuejs/vue-cli/commit/1fcd2d0))
+* **ui:** nav button bullet border color ([aee5c93](https://github.com/vuejs/vue-cli/commit/aee5c93))
+* **ui:** nav button custom image align ([99b030a](https://github.com/vuejs/vue-cli/commit/99b030a))
+* **ui:** reload plugin api after plugin update ([be3d538](https://github.com/vuejs/vue-cli/commit/be3d538))
+* **ui:** reset apollo store on reconnect ([caf31a1](https://github.com/vuejs/vue-cli/commit/caf31a1))
+* **ui:** save db in user home ([6e1f735](https://github.com/vuejs/vue-cli/commit/6e1f735))
+* **ui:** Suggestions API fixes ([e7e2fb2](https://github.com/vuejs/vue-cli/commit/e7e2fb2))
+* **ui:** task command too long ([9426f38](https://github.com/vuejs/vue-cli/commit/9426f38))
+* **unit-mocha:** node externals are unnecessary for testing client code ([460c200](https://github.com/vuejs/vue-cli/commit/460c200)), closes [#1548](https://github.com/vuejs/vue-cli/issues/1548)
+
+
+### Features
+
+* **ui:** api.hasPlugin(id) ([8fae98e](https://github.com/vuejs/vue-cli/commit/8fae98e))
+* **ui:** config improvements ([#1487](https://github.com/vuejs/vue-cli/issues/1487)) ([dbef5e9](https://github.com/vuejs/vue-cli/commit/dbef5e9))
+* **ui:** dark mode ([#1512](https://github.com/vuejs/vue-cli/issues/1512)) ([e258f5a](https://github.com/vuejs/vue-cli/commit/e258f5a))
+* **ui:** devtools suggestion ([0a2ea1f](https://github.com/vuejs/vue-cli/commit/0a2ea1f))
+* **ui:** git commit message + disable git ([#1541](https://github.com/vuejs/vue-cli/issues/1541)) ([29c1ce5](https://github.com/vuejs/vue-cli/commit/29c1ce5))
+* apply minimal transpilation when building as web component ([3b2cc6b](https://github.com/vuejs/vue-cli/commit/3b2cc6b))
+* modern mode ([204d8f0](https://github.com/vuejs/vue-cli/commit/204d8f0))
+* vue-cli-service build --report/--report-json ([272ef5e](https://github.com/vuejs/vue-cli/commit/272ef5e))
+* **ui:** jest task ([692d463](https://github.com/vuejs/vue-cli/commit/692d463))
+* **ui:** new hooks for plugins ([8ba6bcf](https://github.com/vuejs/vue-cli/commit/8ba6bcf))
+* **ui:** open eslintrc suggestion ([a26669c](https://github.com/vuejs/vue-cli/commit/a26669c))
+* **ui:** PluginApi: notify ([e35ee25](https://github.com/vuejs/vue-cli/commit/e35ee25))
+* **ui:** pwa open vue config/manifest suggestions ([e57e749](https://github.com/vuejs/vue-cli/commit/e57e749))
+* **ui:** status color bullet on tasks with image icon ([9aec563](https://github.com/vuejs/vue-cli/commit/9aec563))
+* **ui:** suggestion and progress PluginAPI + add vue-router/vuex suggestions ([9b068b1](https://github.com/vuejs/vue-cli/commit/9b068b1))
+
+
+### BREAKING CHANGES
+
+* **ui:** - The configuration API has changed.
+- The `files` options now accept an object of different config files:
+
+```js
+api.describeConfig({
+  /* ... */
+  // All possible files for this config
+  files: {
+    // eslintrc.js
+    eslint: {
+      js: ['.eslintrc.js'],
+      json: ['.eslintrc', '.eslintrc.json'],
+      // Will read from `package.json`
+      package: 'eslintConfig'
+    },
+    // vue.config.js
+    vue: {
+      js: ['vue.config.js']
+    }
+  },
+})
+```
+
+- The `onWrite` api has changed: `setData` and `assignData` have now `fileId` as the first argument:
+
+```js
+api.describeConfig({
+  onWrite: async ({ api, prompts }) => {
+    const eslintData = {}
+    const vueData = {}
+    for (const prompt of prompts) {
+      // eslintrc
+      if (prompt.id.indexOf('vue/') === 0) {
+        eslintData[`rules.${prompt.id}`] = await api.getAnswer(prompt.id, JSON.parse)
+      } else {
+        // vue.config.js
+        vueData[prompt.id] = await api.getAnswer(prompt.id)
+      }
+    }
+    api.setData('eslint', eslintData)
+    api.setData('vue', vueData)
+  }
+})
+```
+
+Other changes
+
+- Config tabs (optional):
+
+```js
+api.describeConfig({
+  /* ... */
+  onRead: ({ data, cwd }) => ({
+    tabs: [
+      {
+        id: 'tab1',
+        label: 'My tab',
+        // Optional
+        icon: 'application_settings',
+        prompts: [
+          // Prompt objects
+        ]
+      },
+      {
+        id: 'tab2',
+        label: 'My other tab',
+        prompts: [
+          // Prompt objects
+        ]
+      }
+    ]
+  })
+})
+```
+
+
+
 <a name="3.0.0-beta.16"></a>
 # [3.0.0-beta.16](https://github.com/vuejs/vue-cli/compare/v3.0.0-beta.15...v3.0.0-beta.16) (2018-06-08)
 

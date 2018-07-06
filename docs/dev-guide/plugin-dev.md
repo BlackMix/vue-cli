@@ -235,6 +235,30 @@ export default {
 <%# END_REPLACE %>
 ```
 
+#### Filename edge cases
+
+If you want to render a template file that either begins with a dot (i.e. `.env`) you will have to follow a specific naming convention, since dotfiles are ignored when publishing your plugin to npm:
+```
+# dotfile templates have to use an underscore instead of the dot:
+
+/generator/template/_env
+
+# When calling api.render('./template'), this will be rendered in the project folder as:
+
+.env
+```
+Consequently, this means that you also have to follow a special naming convention if you want to render file whose name actually begins with an underscore:
+```
+# such templates have to use two underscores instead of the dot:
+
+/generator/template/__variables.scss
+
+# When calling api.render('./template'), this will be rendered in the project folder as:
+
+_variables.scss
+```
+
+
 ### Prompts
 
 #### Prompts for Built-in Plugins
@@ -246,13 +270,13 @@ A prompt module should export a function that receives a [PromptModuleAPI][promp
 ``` js
 module.exports = api => {
   // a feature object should be a valid inquirer choice object
-  cli.injectFeature({
+  api.injectFeature({
     name: 'Some great feature',
     value: 'my-feature'
   })
 
   // injectPrompt expects a valid inquirer prompt object
-  cli.injectPrompt({
+  api.injectPrompt({
     name: 'someFlag',
     // make sure your prompt only shows up if user has picked your feature
     when: answers => answers.features.include('my-feature'),
@@ -262,7 +286,7 @@ module.exports = api => {
 
   // when all prompts are done, inject your plugin into the options that
   // will be passed on to Generators
-  cli.onPromptComplete((answers, options) => {
+  api.onPromptComplete((answers, options) => {
     if (answers.features.includes('my-feature')) {
       options.plugins['vue-cli-plugin-my-feature'] = {
         someFlag: answers.someFlag

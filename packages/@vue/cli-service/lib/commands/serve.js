@@ -1,6 +1,6 @@
 const {
   info,
-  hasYarn,
+  hasProjectYarn,
   openBrowser,
   IpcMessenger
 } = require('@vue/cli-shared-utils')
@@ -17,6 +17,7 @@ module.exports = (api, options) => {
     usage: 'vue-cli-service serve [options] [entry]',
     options: {
       '--open': `open browser on server start`,
+      '--copy': `copy url to clipboard on server start`,
       '--mode': `specify env mode (default: development)`,
       '--host': `specify host (default: ${defaults.host})`,
       '--port': `specify port (default: ${defaults.port})`,
@@ -192,7 +193,7 @@ module.exports = (api, options) => {
           isFirstCompile = false
 
           if (!isProduction) {
-            const buildCommand = hasYarn() ? `yarn build` : `npm run build`
+            const buildCommand = hasProjectYarn(api.getCwd()) ? `yarn build` : `npm run build`
             console.log(`  Note that the development build is not optimized.`)
             console.log(`  To create a production build, run ${chalk.cyan(buildCommand)}.`)
           } else {
@@ -208,7 +209,6 @@ module.exports = (api, options) => {
           // Send final app URL
           if (args.dashboard) {
             const ipc = new IpcMessenger()
-            ipc.connect()
             ipc.send({
               vueServe: {
                 url: urls.localUrlForBrowser

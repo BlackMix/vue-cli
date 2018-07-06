@@ -5,11 +5,12 @@
 'use strict'
 
 const path = require('path')
+const fs = require('fs-extra')
 const webpack = require('webpack')
 const { IpcMessenger } = require('@vue/cli-shared-utils')
 const { analyzeBundle } = require('./analyzeBundle')
 
-const ID = 'DashboardPlugin'
+const ID = 'vue-cli-dashboard-plugin'
 const ONE_SECOND = 1000
 const FILENAME_QUERY_REGEXP = /\?.*$/
 
@@ -32,12 +33,16 @@ function getTimeMessage (timer) {
 class DashboardPlugin {
   constructor (options) {
     this.type = options.type
+    if (this.type === 'build' && options.modernBuild) {
+      this.type = 'build-modern'
+    }
     this.watching = false
+    this.autoDisconnect = !options.keepAlive
   }
 
   cleanup () {
     this.sendData = null
-    ipc.disconnect()
+    if (this.autoDisconnect) ipc.disconnect()
   }
 
   apply (compiler) {
@@ -47,7 +52,6 @@ class DashboardPlugin {
     let assetSources = new Map()
 
     if (!sendData) {
-      ipc.connect()
       sendData = data => ipc.send({
         webpackDashboardData: {
           type: this.type,
@@ -61,7 +65,7 @@ class DashboardPlugin {
     const progressPlugin = new webpack.ProgressPlugin((percent, msg) => {
       // Debouncing
       const time = Date.now()
-      if (time - progressTime > 100) {
+      if (time - progressTime > 300) {
         progressTime = time
         sendData([
           {
@@ -96,6 +100,10 @@ class DashboardPlugin {
         {
           type: 'status',
           value: 'Compiling'
+        },
+        {
+          type: 'progress',
+          value: 0
         }
       ])
     })
@@ -163,25 +171,32 @@ class DashboardPlugin {
         },
         {
           type: 'progress',
-          value: 0
+          value: 1
         },
         {
           type: 'operations',
           value: `idle${getTimeMessage(timer)}`
-        },
-        {
-          type: 'stats',
-          value: {
-            errors: hasErrors,
-            warnings: stats.hasWarnings(),
-            data: statsData
-          }
         }
       ])
 
-      if (!this.watching) {
-        this.cleanup()
-      }
+      const statsFile = path.resolve(process.cwd(), `./node_modules/.stats-${this.type}.json`)
+      fs.writeJson(statsFile, {
+        errors: hasErrors,
+        warnings: stats.hasWarnings(),
+        data: statsData
+      }).then(() => {
+        sendData([
+          {
+            type: 'stats'
+          }
+        ])
+
+        if (!this.watching) {
+          this.cleanup()
+        }
+      }).catch(error => {
+        console.error(error)
+      })
     })
   }
 }
