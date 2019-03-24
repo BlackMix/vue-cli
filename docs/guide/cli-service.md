@@ -29,6 +29,14 @@ If you have [npx](https://github.com/zkat/npx) available (should be bundled with
 npx vue-cli-service serve
 ```
 
+::: tip
+You can run scripts with additional features using the GUI with the `vue ui` command.
+:::
+
+Here is the Webpack Analyzer from the GUI in action:
+
+![UI Webpack Analyzer](/ui-analyzer.png)
+
 ## vue-cli-service serve
 
 ```
@@ -44,9 +52,16 @@ Options:
   --https   use https (default: false)
 ```
 
-The `serve` command starts a dev server (based on [webpack-dev-server](https://github.com/webpack/webpack-dev-server)) that comes with Hot-Module-Replacement (HMR) working out of the box.
+::: tip --copy
+Copying to clipboard might not work on a few platforms.  
+If copying was successful, `(copied to clipboard)` is displayed next to the local dev server URL.
+:::
+
+The `vue-cli-service serve` command starts a dev server (based on [webpack-dev-server](https://github.com/webpack/webpack-dev-server)) that comes with Hot-Module-Replacement (HMR) working out of the box.
 
 In addition to the command line flags, you can also configure the dev server using the [devServer](../config/#devserver) field in `vue.config.js`.
+
+`[entry]` in the CLI command is defined as *the entry file*, not *an additional entry file*. If you overwrite the entry in the CLI, then the entries from `config.pages` are no longer considered, which may cause an error.
 
 ## vue-cli-service build
 
@@ -59,6 +74,7 @@ Options:
   --dest        specify output directory (default: dist)
   --modern      build app targeting modern browsers with auto fallback
   --target      app | lib | wc | wc-async (default: app)
+  --formats     list of output formats for library builds (default: commonjs,umd,umd-min)
   --name        name for lib or web-component mode (default: "name" in package.json or entry filename)
   --no-clean    do not remove the dist directory before building the project
   --report      generate report.html to help analyze bundle content
@@ -128,4 +144,4 @@ When installed, `@vue/cli-service` also installs [yorkie](https://github.com/yyx
 
 Projects created via `vue create` are ready to go without the need for additional configuration. The plugins are designed to work with one another so in most cases, all you need to do is pick the features you want during the interactive prompts.
 
-However, we also understand that it's impossible to cater to every possible need, and the need of a project may also change over time. Projects created by Vue CLI allows you to configure almost every aspect of the tooling without ever needing to eject. Check out the [Config Reference](../config/) for more details.
+However, we also understand that it's impossible to cater to every possible need, and the need of a project may also change over time. Projects created by Vue CLI allow you to configure almost every aspect of the tooling without ever needing to eject. Check out the [Config Reference](../config/) for more details.

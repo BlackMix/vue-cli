@@ -1,28 +1,27 @@
 const fs = require('fs')
-const os = require('os')
-const path = require('path')
 const cloneDeep = require('lodash.clonedeep')
+const { getRcPath } = require('./util/rcPath')
+const { exit } = require('@vue/cli-shared-utils/lib/exit')
 const { error } = require('@vue/cli-shared-utils/lib/logger')
 const { createSchema, validate } = require('@vue/cli-shared-utils/lib/validate')
-const { exit } = require('@vue/cli-shared-utils/lib/exit')
-const { xdgConfigPath } = require('./util/xdgConfig')
 
-const rcPath = exports.rcPath = (
-  process.env.VUE_CLI_CONFIG_PATH ||
-  xdgConfigPath('.vuerc') ||
-  path.join(os.homedir(), '.vuerc')
-)
+const rcPath = exports.rcPath = getRcPath('.vuerc')
 
 const presetSchema = createSchema(joi => joi.object().keys({
+  bare: joi.boolean(),
   useConfigFiles: joi.boolean(),
   router: joi.boolean(),
+  routerHistoryMode: joi.boolean(),
   vuex: joi.boolean(),
-  cssPreprocessor: joi.string().only(['sass', 'less', 'stylus']),
+  // TODO: remove 'sass' or make it equivalent to 'dart-sass' in v4
+  cssPreprocessor: joi.string().only(['sass', 'dart-sass', 'node-sass', 'less', 'stylus']),
   plugins: joi.object().required(),
   configs: joi.object()
 }))
 
 const schema = createSchema(joi => joi.object().keys({
+  latestVersion: joi.string().regex(/^\d+\.\d+\.\d+$/),
+  lastChecked: joi.date().timestamp(),
   packageManager: joi.string().only(['yarn', 'npm']),
   useTaobaoRegistry: joi.boolean(),
   presets: joi.object().pattern(/^/, presetSchema)
@@ -47,6 +46,9 @@ exports.defaultPreset = {
 }
 
 exports.defaults = {
+  lastChecked: undefined,
+  latestVersion: undefined,
+
   packageManager: undefined,
   useTaobaoRegistry: undefined,
   presets: {

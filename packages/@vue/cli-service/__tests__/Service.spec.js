@@ -6,6 +6,8 @@ const fs = require('fs')
 const path = require('path')
 const Service = require('../lib/Service')
 
+const { logs } = require('@vue/cli-shared-utils')
+
 const mockPkg = json => {
   fs.writeFileSync('/package.json', JSON.stringify(json, null, 2))
 }
@@ -62,7 +64,7 @@ test('loading plugins from package.json', () => {
   mockPkg({
     devDependencies: {
       'bar': '^1.0.0',
-      '@vue/cli-plugin-babel': '^3.0.0-rc.3',
+      '@vue/cli-plugin-babel': '^3.5.0',
       'vue-cli-plugin-foo': '^1.0.0'
     }
   })
@@ -82,21 +84,80 @@ test('load project options from package.json', () => {
   expect(service.projectOptions.lintOnSave).toBe(true)
 })
 
-test('handle option baseUrl and outputDir correctly', () => {
+test('deprecate baseUrl', () => {
   mockPkg({
     vue: {
-      baseUrl: 'https://foo.com/bar',
+      baseUrl: './foo/bar'
+    }
+  })
+  createMockService()
+  expect(logs.warn.some(([msg]) => msg.match('is deprecated now, please use "publicPath" instead.')))
+})
+
+test('discard baseUrl if publicPath also exists', () => {
+  mockPkg({
+    vue: {
+      baseUrl: '/foo/barbase/',
+      publicPath: '/foo/barpublic/'
+    }
+  })
+
+  const service = createMockService()
+  expect(logs.warn.some(([msg]) => msg.match('"baseUrl" will be ignored in favor of "publicPath"')))
+  expect(service.projectOptions.publicPath).toBe('/foo/barpublic/')
+})
+
+test('handle option publicPath and outputDir correctly', () => {
+  mockPkg({
+    vue: {
+      publicPath: 'https://foo.com/bar',
       outputDir: '/public/'
     }
   })
   const service = createMockService()
-  expect(service.projectOptions.baseUrl).toBe('https://foo.com/bar/')
-  expect(service.projectOptions.outputDir).toBe('public')
+  expect(service.projectOptions.publicPath).toBe('https://foo.com/bar/')
+  expect(service.projectOptions.outputDir).toBe('/public')
+})
+
+test('normalize publicPath when relative', () => {
+  mockPkg({
+    vue: {
+      publicPath: './foo/bar'
+    }
+  })
+  const service = createMockService()
+  expect(service.projectOptions.publicPath).toBe('foo/bar/')
+})
+
+test('keep publicPath when empty', () => {
+  mockPkg({
+    vue: {
+      publicPath: ''
+    }
+  })
+  const service = createMockService()
+  expect(service.projectOptions.publicPath).toBe('')
 })
 
 test('load project options from vue.config.js', () => {
   process.env.VUE_CLI_SERVICE_CONFIG_PATH = `/vue.config.js`
   fs.writeFileSync('/vue.config.js', `module.exports = { lintOnSave: false }`)
+  mockPkg({
+    vue: {
+      lintOnSave: true
+    }
+  })
+  const service = createMockService()
+  fs.unlinkSync('/vue.config.js')
+  delete process.env.VUE_CLI_SERVICE_CONFIG_PATH
+  // vue.config.js has higher priority
+  expect(service.projectOptions.lintOnSave).toBe(false)
+})
+
+test('load project options from vue.config.js', () => {
+  process.env.VUE_CLI_SERVICE_CONFIG_PATH = `/vue.config.js`
+  fs.writeFileSync('/vue.config.js', '')  // only to ensure fs.existsSync returns true
+  jest.mock('/vue.config.js', () => function () { return { lintOnSave: false } }, { virtual: true })
   mockPkg({
     vue: {
       lintOnSave: true
@@ -192,6 +253,7 @@ test('api: configureWebpack', () => {
   }])
 
   const config = service.resolveWebpackConfig()
+  console.log(process.env.VUE_CLI_ENTRY_FILES)
   expect(config.output.path).toBe('test-dist-2')
 })
 
@@ -211,6 +273,50 @@ test('api: configureWebpack returning object', () => {
 
   const config = service.resolveWebpackConfig()
   expect(config.output.path).toBe('test-dist-3')
+})
+
+test('api: configureWebpack preserve ruleNames', () => {
+  const service = createMockService([
+    {
+      id: 'babel',
+      apply: require('@vue/cli-plugin-babel')
+    },
+    {
+      id: 'test',
+      apply: api => {
+        api.configureWebpack({
+          module: {
+            rules: []
+          }
+        })
+      }
+    }
+  ])
+
+  const config = service.resolveWebpackConfig()
+  expect(config.module.rules[0].__ruleNames).toEqual(['js'])
+})
+
+test('internal: should correctly set VUE_CLI_ENTRY_FILES', () => {
+  const service = createMockService([{
+    id: 'test',
+    apply: api => {
+      api.configureWebpack(config => {
+        config.entry = {
+          page1: './src/page1.js',
+          page2: './src/page2.js'
+        }
+      })
+    }
+  }])
+
+  service.resolveWebpackConfig()
+  expect(process.env.VUE_CLI_ENTRY_FILES).toEqual(
+    JSON.stringify([
+      path.resolve('/', './src/page1.js'),
+      path.resolve('/', './src/page2.js')
+    ])
+  )
 })
 
 test('api: configureDevServer', () => {

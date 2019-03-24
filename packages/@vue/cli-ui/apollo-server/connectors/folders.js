@@ -24,7 +24,13 @@ function isDirectory (file) {
 }
 
 async function list (base, context) {
-  const files = await fs.readdir(base, 'utf8')
+  let dir = base
+  if (isPlatformWindows) {
+    if (base.match(/^([A-Z]{1}:)$/)) {
+      dir = path.join(base, '\\')
+    }
+  }
+  const files = await fs.readdir(dir, 'utf8')
   return files.map(
     file => {
       const folderPath = path.join(base, file)
@@ -100,16 +106,19 @@ function readPackage (file, context, force = false) {
       return cachedValue
     }
   }
-  const pkg = fs.readJsonSync(path.join(file, 'package.json'))
-  pkgCache.set(file, pkg)
-  return pkg
+  const pkgFile = path.join(file, 'package.json')
+  if (fs.existsSync(pkgFile)) {
+    const pkg = fs.readJsonSync(pkgFile)
+    pkgCache.set(file, pkg)
+    return pkg
+  }
 }
 
 function writePackage ({ file, data }, context) {
   fs.outputJsonSync(path.join(file, 'package.json'), data, {
     spaces: 2
   })
-  invalidatePackage(file)
+  invalidatePackage(file, context)
   return true
 }
 

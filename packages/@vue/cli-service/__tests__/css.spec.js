@@ -54,15 +54,15 @@ test('default loaders', () => {
   LANGS.forEach(lang => {
     const loader = lang === 'css' ? [] : LOADERS[lang]
     expect(findLoaders(config, lang)).toEqual(['vue-style', 'css', 'postcss'].concat(loader))
+    expect(findOptions(config, lang, 'postcss').plugins).toBeFalsy()
     // assert css-loader options
     expect(findOptions(config, lang, 'css')).toEqual({
-      minimize: false,
       sourceMap: false,
-      importLoaders: lang === 'css' ? 2 : 3
+      importLoaders: 2
     })
   })
   // sass indented syntax
-  expect(findOptions(config, 'sass', 'sass')).toEqual({ indentedSyntax: true, sourceMap: false })
+  expect(findOptions(config, 'sass', 'sass')).toMatchObject({ indentedSyntax: true, sourceMap: false })
 })
 
 test('production defaults', () => {
@@ -70,10 +70,10 @@ test('production defaults', () => {
   LANGS.forEach(lang => {
     const loader = lang === 'css' ? [] : LOADERS[lang]
     expect(findLoaders(config, lang)).toEqual([extractLoaderPath, 'css', 'postcss'].concat(loader))
+    expect(findOptions(config, lang, 'postcss').plugins).toBeFalsy()
     expect(findOptions(config, lang, 'css')).toEqual({
-      minimize: true,
       sourceMap: false,
-      importLoaders: lang === 'css' ? 2 : 3
+      importLoaders: 2
     })
   })
 })
@@ -88,9 +88,8 @@ test('CSS Modules rules', () => {
   })
   LANGS.forEach(lang => {
     const expected = {
-      importLoaders: lang === 'css' ? 1 : 2, // no postcss-loader
+      importLoaders: 1, // no postcss-loader
       localIdentName: `[name]_[local]_[hash:base64:5]`,
-      minimize: false,
       sourceMap: false,
       modules: true
     }
@@ -112,7 +111,30 @@ test('css.extract', () => {
     }
   }, 'production')
   LANGS.forEach(lang => {
-    expect(findLoaders(config, lang)).not.toContain(extractLoaderPath)
+    const loader = lang === 'css' ? [] : LOADERS[lang]
+    // when extract is false in production, even without postcss config,
+    // an instance of postcss-loader is injected for inline minification.
+    expect(findLoaders(config, lang)).toEqual(['vue-style', 'css', 'postcss'].concat(loader))
+    expect(findOptions(config, lang, 'css').importLoaders).toBe(2)
+    expect(findOptions(config, lang, 'postcss').plugins).toBeTruthy()
+  })
+
+  const config2 = genConfig({
+    postcss: {},
+    vue: {
+      css: {
+        extract: false
+      }
+    }
+  }, 'production')
+  LANGS.forEach(lang => {
+    const loader = lang === 'css' ? [] : LOADERS[lang]
+    // if postcss config is present, two postcss-loaders will be used becasue it
+    // does not support mixing config files with loader options.
+    expect(findLoaders(config2, lang)).toEqual(['vue-style', 'css', 'postcss', 'postcss'].concat(loader))
+    expect(findOptions(config2, lang, 'css').importLoaders).toBe(3)
+    // minification loader should be injected before the user-facing postcss-loader
+    expect(findOptions(config2, lang, 'postcss').plugins).toBeTruthy()
   })
 })
 
@@ -171,8 +193,14 @@ test('css.loaderOptions', () => {
     }
   })
 
-  expect(findOptions(config, 'scss', 'sass')).toEqual({ data, sourceMap: false })
-  expect(findOptions(config, 'sass', 'sass')).toEqual({ data, indentedSyntax: true, sourceMap: false })
+  expect(findOptions(config, 'scss', 'sass')).toMatchObject({ data, sourceMap: false })
+  expect(findOptions(config, 'sass', 'sass')).toMatchObject({ data, indentedSyntax: true, sourceMap: false })
+})
+
+test('should use dart sass implementation whenever possible', () => {
+  const config = genConfig()
+  expect(findOptions(config, 'scss', 'sass')).toMatchObject({ fiber: require('fibers'), implementation: require('sass') })
+  expect(findOptions(config, 'sass', 'sass')).toMatchObject({ fiber: require('fibers'), implementation: require('sass') })
 })
 
 test('skip postcss-loader if no postcss config found', () => {
